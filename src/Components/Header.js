@@ -1,19 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
+import PropTypes from 'prop-types';
 import styled from "styled-components";
 import avatarLarge from "../assets/avatar_small.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
-function Menu() {
-  const StyledWrapper = styled.div`
-    height: 100vh;
-    width: 304px;
-    background: linear-gradient(180deg, #6fcf9d 0%, #67d2e8 100%);
-    position: absolute;
-    padding-top: 10%;
-    top: 0;
-    left: 0;
-  `;
+function Menu(props) {  
+
+  const {open} = props;
+
+
 
   const StyledNav = styled.nav`
     ul {
@@ -36,18 +32,20 @@ function Menu() {
   `;
 
   return (
-    <StyledWrapper>
       <StyledNav>
         <ul>
           <StyledLi  active={true}> Dash </StyledLi>
           <StyledLi > Profile </StyledLi>
         </ul>
-      </StyledNav>
-    </StyledWrapper>
-  );
+      </StyledNav>);
 }
 
+
+
 function Header() {
+
+  
+  
   const StyledBurgerMenu = styled.div`
     width: 90px;
     cursor: pointer;
@@ -62,7 +60,7 @@ function Header() {
     }
   `;
 
-  const UserAvatar = styled.div`
+  const StyledUserAvatar = styled.div`
     color: ${({ theme }) => theme.colors.darkShade[50]};
     display: flex;
     align-items: center;
@@ -70,6 +68,17 @@ function Header() {
       margin-top: 8%;
     }
   `;
+
+  const StyledMenuWrapper = styled.div`
+  transform: ${({ open }) => open ? 'translateX(0)' : 'translateX(-100%)'};
+  height: 100vh;
+  width: 304px;
+  background: linear-gradient(180deg, #6fcf9d 0%, #67d2e8 100%);
+  position: absolute;
+  padding-top: 10%;
+  top: 0;
+  left: 0;
+`;
 
   const StyledWrapper = styled.div`
     width: 100%;
@@ -83,20 +92,25 @@ function Header() {
     justify-content: space-between;
   `;
 
+
+
   return (
     <div>
-      <Menu />
+      <StyledMenuWrapper>
+          <Menu  />
+      </StyledMenuWrapper>
+     
       <StyledWrapper>
-        <StyledBurgerMenu>
+        <StyledBurgerMenu >
           <hr />
           <hr />
           <hr />
         </StyledBurgerMenu>
-        <UserAvatar>
+        <StyledUserAvatar>
           <FontAwesomeIcon style={{ fontSize: "16px" }} icon={faChevronDown} />
           <h6> Joe Appleton</h6>
           <img src={avatarLarge} />
-        </UserAvatar>
+        </StyledUserAvatar>
       </StyledWrapper>
     </div>
   );
