@@ -1,15 +1,12 @@
-import React, {useState} from "react";
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import avatarLarge from "../assets/avatar_small.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-function Menu(props) {  
-
-  const {open} = props;
-
-
+function Menu(props) {
+  const { onClick } = props;
 
   const StyledNav = styled.nav`
     ul {
@@ -28,24 +25,38 @@ function Menu(props) {
     display: flex;
     justify-content: center;
     align-items: center;
-    background:   ${({ theme, active }) => active ? theme.colors.darkShade[25] : ""}
+    background: ${({ theme, active }) =>
+      active ? theme.colors.darkShade[25] : ""};
+  `;
+
+  const StyledClosedText = styled.p`
+    text-align: right;
+    padding-right: 3%;
+    margin-bottom: 15%;
+    font-size: 18px;
+    cursor: pointer;
   `;
 
   return (
+    <div>
+      <StyledClosedText onClick={onClick}> X </StyledClosedText>
       <StyledNav>
         <ul>
-          <StyledLi  active={true}> Dash </StyledLi>
-          <StyledLi > Profile </StyledLi>
+          <StyledLi active={true}> Dash </StyledLi>
+          <StyledLi> Profile </StyledLi>
         </ul>
-      </StyledNav>);
+      </StyledNav>
+    </div>
+  );
 }
 
-
+Menu.propTypes = {
+  onClick: PropTypes.func.isRequired
+};
 
 function Header() {
-
   const [open, setOpen] = useState(false);
-  
+
   const StyledBurgerMenu = styled.div`
     width: 90px;
     cursor: pointer;
@@ -70,15 +81,16 @@ function Header() {
   `;
 
   const StyledMenuWrapper = styled.div`
-  transform: ${({ open }) => open ? 'translateX(0)' : 'translateX(-100%)'};
-  height: 100vh;
-  width: 304px;
-  background: linear-gradient(180deg, #6fcf9d 0%, #67d2e8 100%);
-  position: absolute;
-  padding-top: 10%;
-  top: 0;
-  left: 0;
-`;
+    transition: all 1s ease-in-out;
+    transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
+    height: 100vh;
+    width: 304px;
+    background: linear-gradient(180deg, #6fcf9d 0%, #67d2e8 100%);
+    position: absolute;
+    padding-top: 1%;
+    top: 0;
+    left: 0;
+  `;
 
   const StyledWrapper = styled.div`
     width: 100%;
@@ -92,20 +104,17 @@ function Header() {
     justify-content: space-between;
   `;
 
-
-  const handleClick = (e) => {
-
-      e.preventDefault();
-      setOpen(true);
-      
-  }
+  const handleClick = e => {
+    e.preventDefault();
+    setOpen(!open);
+  };
 
   return (
     <div>
       <StyledMenuWrapper open={open}>
-          <Menu  />
+        <Menu onClick={handleClick} />
       </StyledMenuWrapper>
-     
+
       <StyledWrapper>
         <StyledBurgerMenu onClick={handleClick}>
           <hr />
