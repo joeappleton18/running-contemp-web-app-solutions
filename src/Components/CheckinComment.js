@@ -32,7 +32,7 @@ function LikeButton(props) {
 function CheckinComment(props) {
   const StyledDetailsArea = styled.div`
     display: grid;
-    grid-template-columns: 0.5fr 3fr;
+    grid-template-columns: 0.2fr 3fr;
     align-items: center;
     textarea {
         border-radius: 4px;
