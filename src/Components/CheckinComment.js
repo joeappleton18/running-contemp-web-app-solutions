@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Tile from "./Tile";
 import styled from "styled-components";
 import avatarLarge from "../assets/avatar_large.png";
@@ -35,12 +34,12 @@ function CheckinComment(props) {
     grid-template-columns: 0.2fr 3fr;
     align-items: center;
     textarea {
-        border-radius: 4px;
-        border: 1px solid ${({ theme }) => theme.colors.darkShade[25]};
-    }`;
+      margin-top: 2%;
+      border-radius: 4px;
+      border: 1px solid ${({ theme }) => theme.colors.darkShade[25]};
+    }
+  `;
 
-
-    
   const StyledSpan = styled.span`
     color: ${({ theme }) => theme.colors.purple};
   `;
@@ -92,7 +91,7 @@ function CheckinComment(props) {
           <img
             src={avatarLarge}
             style={{ marginBottom: "-20px" }}
-            alt="avatar image"
+            alt="avatar"
           />
           <LikeButton></LikeButton>
         </StyledPhotoArea>
@@ -116,11 +115,7 @@ function CheckinComment(props) {
       <StyledDivider />
 
       <StyledDetailsArea>
-        <img
-          src={avatarSmall}
-          style={{ marginBottom: "-20px" }}
-          alt="avatar image"
-        />
+        <img src={avatarSmall} style={{ marginBottom: "-20px" }} alt="avatar" />
 
         <CommentArea>
           <h6>
@@ -132,19 +127,9 @@ function CheckinComment(props) {
       </StyledDetailsArea>
 
       <StyledDetailsArea>
-        <img
-          src={avatarSmall}
-          style={{ marginBottom: "-20px" }}
-          alt="avatar image"
-        />
+        <img src={avatarSmall} style={{ marginBottom: "-20px" }} alt="avatar" />
 
-        <textarea rows="4"> 
-
-
-        </textarea>
-       
-      
-
+        <textarea rows="4"></textarea>
       </StyledDetailsArea>
     </Tile>
   );

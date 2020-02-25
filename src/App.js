@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import theme from "./config/theme.js";
 import { ThemeProvider } from "styled-components";
 import GlobalStyles from "./config/GlobalStyles";
-import DaysCompleted from "./Components/DaysCompleted";
-import CheckinComment from "./Components/CheckinComment";
 import Header from "./Components/Header";
+import { Switch, Route, useLocation } from "react-router-dom";
+
+import Dash from "./Views/Dash";
+import Join from "./Views/Join";
+import Checkin from "./Views/Checkin";
+import Profile from "./Views/Profile";
 
 const checkins = [
   {
@@ -54,17 +58,47 @@ const checkins = [
 ];
 
 function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const handleClick = e => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleOuterWrapperClick = e => {
+    setMenuOpen(false);
+  };
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Header />
+        {location.pathname !== "/join" && (
+          <Header onClick={handleClick} open={menuOpen} />
+        )}
         <GlobalStyles />
-        <DaysCompleted days={15} checkins={checkins}>
-          {" "}
-        </DaysCompleted>
-       
-       <CheckinComment />
-
+        <div
+          onClick={handleOuterWrapperClick}
+          style={{ width: "100vw", height: "100vh" }}
+        >
+          <Switch>
+            <Route exact path="/">
+              <Dash checkins={checkins} />
+            </Route>
+            <Route path="/join">
+              <Join />
+            </Route>
+            <Route path="/profile">
+              <Profile />
+            </Route>
+            <Route path="/checkin">
+              <Checkin />
+            </Route>
+          </Switch>
+        </div>
       </ThemeProvider>
     </div>
   );

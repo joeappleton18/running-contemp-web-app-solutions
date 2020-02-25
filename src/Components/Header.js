@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import avatarLarge from "../assets/avatar_small.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {Link, useLocation} from "react-router-dom";
+
 
 function Menu(props) {
   const { onClick } = props;
-
+  const location = useLocation();
   const StyledNav = styled.nav`
-    ul {
+    ul {  
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -42,8 +44,8 @@ function Menu(props) {
       <StyledClosedText onClick={onClick}> X </StyledClosedText>
       <StyledNav>
         <ul>
-          <StyledLi active={true}> Dash </StyledLi>
-          <StyledLi> Profile </StyledLi>
+          <StyledLi active={location.pathname === "/"}>  <Link to="/"> Dash </Link> </StyledLi>
+          <StyledLi active={location.pathname === "/profile"}>  <Link to="/profile"> Profile </Link> </StyledLi>
         </ul>
       </StyledNav>
     </div>
@@ -54,8 +56,18 @@ Menu.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-function Header() {
-  const [open, setOpen] = useState(false);
+function Header(props) {
+
+  const {onClick, open} = props;
+
+  const handleClick = e => {
+    e.preventDefault();
+    onClick(e);
+  };
+
+
+  
+
 
   const StyledBurgerMenu = styled.div`
     width: 90px;
@@ -104,11 +116,7 @@ function Header() {
     justify-content: space-between;
   `;
 
-  const handleClick = e => {
-    e.preventDefault();
-    setOpen(!open);
-  };
-
+ 
   return (
     <div>
       <StyledMenuWrapper open={open}>
@@ -124,11 +132,16 @@ function Header() {
         <StyledUserAvatar>
           <FontAwesomeIcon style={{ fontSize: "16px" }} icon={faChevronDown} />
           <h6> Joe Appleton</h6>
-          <img src={avatarLarge} />
+          <img src={avatarLarge} alt="avatar" />
         </StyledUserAvatar>
       </StyledWrapper>
     </div>
   );
+}
+
+Header.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
 }
 
 export default Header;
