@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
+import Tile from "../Components/Tile";
 import styled from "styled-components";
+
 import drinkIcon from "../assets/drink-icon.svg";
 import foodIcon from "../assets/food-icon.svg";
 import Button from "../Components/Button";
 import ErrorLabel from "../Components/ErrorLabel";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+
+const StyledTile = styled(Tile)`
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  justify-content: center;
+  grid-row-gap: 20px;
+  width: 100%;
+`;
 
 const StyledHeading = styled.h4`
   text-align: center;
@@ -68,90 +79,87 @@ const StyledCheckinTitle = styled.div`
   justify-content: space-between;
   p {
     font-size: 12px;
-    color: ${({ theme, error }) => error ? 'red' : theme.colors.darkShade[50]};
+    color:  ${({ theme, error}) => error ? "red" : theme.colors.darkShade[25]};
     margin-top: 5%;
-
   }
 `;
 
-
 const CheckinForm = props => {
 
-  const maxCommentLength  = 145;
+  const {onSubmit} = props;
   const [total, setTotal] = useState(0);
-  const [remainingCommentCount, setRemainingCommentCount] = useState(maxCommentLength);
+
+  const maxCommentLength = 5; 
+  
+
 
   const checkinFormSchema = yup.object().shape({
-    exercise: yup.string().required("you must tell us if you exercised"),
-    veg: yup.string().required("you must tell us if ate your veg"),
+    exercise: yup.string().required("you must tell us if you have exercised"),
+    veg: yup.string().required("you must tell us if you consumed your veg"),
     water: yup.string().required("you must tell us if you drank 2l of water"),
-    diet: yup.string().required("you must tell us if you kept to your diet")
+    diet: yup.string().required("you must tell us if you kept tour diet")
   });
-
 
   const { register, handleSubmit, errors, watch } = useForm({
     validationSchema: checkinFormSchema,
-    defaultValues: {
-      exercise: "",
-      veg: "",
-      water: "",
-      diet: "",
-      comment: "",
-      drinkPenalty: "",
-      dietPenalty: ""  
-    }
+    defaultValues: {comment: "", exercise: "", veg: "", water: "", diet: ""}
   });
 
-  
-  let checkinScore = {
-    exercise: "",
-    veg: "",
-    water: "",
-    diet: ""
-  };
+  const comment = watch('comment');
 
-  const diet = watch("diet");
-  const formValues = watch();
-  const comment = watch("comment");
+  const [remainingCommentCount, setRemainingCommentCount] = useState(maxCommentLength);
+
 
   useEffect(() => {
-    setRemainingCommentCount( maxCommentLength - comment.length)
+    
+      setRemainingCommentCount(maxCommentLength - comment.length);
+  
   }, [comment])
-  
 
-  useEffect(() => {
-    checkinScore.exercise = !formValues.exercise
-      ? 0
-      : parseInt(formValues.exercise);
+   const formValues = watch();
+   let checkinScore = {
+      exercise: 0,
+      veg: 0,
+      water: 0,
+      diet: 0
+   }
+
+   useEffect(() => {
+
+    checkinScore.exercise = !formValues.exercise ? 0 : parseInt(formValues.exercise);
     checkinScore.veg = !formValues.veg ? 0 : parseInt(formValues.veg);
     checkinScore.water = !formValues.water ? 0 : parseInt(formValues.water);
-    checkinScore.diet = formValues.diet && parseInt(formValues.diet);
-    if (formValues.diet === "0") {
-        checkinScore.diet = 10 - (parseInt(formValues.dietPenalty) + parseInt(formValues.drinkPenalty))
+
+    if (formValues.diet !== "") {
+       
+      checkinScore.diet = formValues.diet === "0" ? 10 - (parseInt(formValues.foodPen) + parseInt(formValues.drinkPen)) : parseInt(formValues.diet);
+
     }
+    
+    setTotal(checkinScore.exercise + checkinScore.veg + checkinScore.water + checkinScore.diet);
+    
 
-    setTotal(
-      checkinScore.exercise +
-        checkinScore.veg +
-        checkinScore.water +
-        checkinScore.diet
-    );
-  }, [formValues]);
+   }, [formValues])
 
-  const onSubmit = data => {
-      console.log({...data,...checkinScore, ...{total}})
+
+
+  const diet = watch("diet");
+
+  const onFormSubmit = data => {
+    onSubmit({...data, ...checkinScore, ...{total:total}});
   };
 
   return (
-    <StyledForm onSubmit={handleSubmit(onSubmit)}>
-      <StyledLabel>Did you exercise for at least 20 mins (5)?</StyledLabel>
+    <StyledForm onSubmit={handleSubmit(onFormSubmit)}>
+      {/*JSON.stringify("this is the" + diet)*/}
+      <StyledLabel>Did you exercise for at least 20 mins (5) ?</StyledLabel>
       <StyledCheckinP>
         {" "}
         <span>
           <input type="radio" value="5" name="exercise" ref={register} /> Yes{" "}
         </span>{" "}
         <span>
-          <input type="radio" value="0" name="exercise" ref={register} /> No{" "}
+          <input type="radio" value="0" name="exercise" /> No{" "}
         </span>{" "}
       </StyledCheckinP>
       <ErrorLabel> {errors.exercise && errors.exercise.message} </ErrorLabel>
@@ -192,38 +200,44 @@ const CheckinForm = props => {
           <StyledLabel>Drinks</StyledLabel>
           <StyledLabel>Food</StyledLabel>
           <div>
-            <StyledIcon src={drinkIcon} />
-            <StyledSelect name="drinkPenalty" ref={register}>
+            <StyledIcon src={drinkIcon}  />
+            <StyledSelect name="drinkPen" ref={register}>
               <option value="0"> 0 </option>
               <option value="1"> 1 </option>
               <option value="2"> 2 </option>
               <option value="3"> 3 </option>
               <option value="4"> 4 </option>
-              <option value="4"> 5 </option>
+              <option value="5"> 5 </option>
             </StyledSelect>
           </div>
           <div>
             <StyledIcon src={foodIcon} />
-            <StyledSelect name="dietPenalty" ref={register}>
+            <StyledSelect name="foodPen" ref={register}>
               <option value="0"> 0 </option>
               <option value="1"> 1 </option>
               <option value="2"> 2 </option>
               <option value="3"> 3 </option>
               <option value="4"> 4 </option>
-              <option value="4"> 5 </option>
+              <option value="5"> 5 </option>
             </StyledSelect>
           </div>
         </StyledFoodDrinkArea>
       )}
 
-      <StyledCheckinTitle  error={remainingCommentCount < 0}> 
-        <StyledLabel>Comments</StyledLabel> <p>{remainingCommentCount}</p>{" "}
+      <StyledCheckinTitle  error={remainingCommentCount < 0} >
+      <StyledLabel>Comment</StyledLabel> <p>{remainingCommentCount}</p>{" "}
       </StyledCheckinTitle>
       <textarea rows="4" cols="40" name="comment" ref={register}></textarea>
       <StyledHeading> Total: {total} points </StyledHeading>
       <Button text="CHECKIN"> </Button>
     </StyledForm>
   );
+};
+
+CheckinForm.propTypes = {
+
+  onSubmit: PropTypes.func.isRequired
+
 };
 
 export default CheckinForm;
