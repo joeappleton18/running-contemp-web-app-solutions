@@ -19,3 +19,4 @@ Each weekly solution is held in a isolated git branch (e.g., `week-2-solutions`)
 | Week | Command                                                                                                |
 | ---- | ------------------------------------------------------------------------------------------------------ |
 | 2    | `git clone -b week-2-solutions https://github.com/joeappleton18/running-contemp-web-app-solutions.git` |
+| 3    | `git clone -b week-3-solutions https://github.com/joeappleton18/running-contemp-web-app-solutions.git` |
