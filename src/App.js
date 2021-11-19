@@ -102,7 +102,8 @@ function App() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      history.push("/");
+      debugger;
+      history.push(history.location.state.from.pathname);
       return;
     }
     return;
@@ -123,7 +124,7 @@ function App() {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        {(location.pathname !== "/join" && location.pathname !== "/login") && (
+        {location.pathname !== "/join" && location.pathname !== "/login" && (
           <Header onClick={handleClick} open={menuOpen} signOut={signUserOut} />
         )}
         <GlobalStyles />
@@ -146,12 +147,12 @@ function App() {
             <Route path="/login">
               <Login signInEmailUser={signInEmailUser} />
             </Route>
-            <Route path="/profile">
+            <Protected authenticated={isAuthenticated} path="/profile">
               <Profile />
-            </Route>
-            <Route path="/checkin">
+            </Protected>
+            <Protected authenticated={isAuthenticated} exact path="/checkin">
               <Checkin />
-            </Route>
+            </Protected>
           </Switch>
         </div>
       </ThemeProvider>
