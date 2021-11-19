@@ -9,7 +9,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 function LoginForm(props) {
-  const { buttonText, onEmailSubmit, onSocialSubmit } = props;
+  const { buttonText, onEmailSubmit, onSocialSubmit, serverErrorMessage } =
+    props;
   debugger;
   const [displayEmail, setDisplayEmail] = useState(false);
 
@@ -88,10 +89,10 @@ function LoginForm(props) {
               style={errorBorder(errors.password)}
             />
             <ErrorLabel>
-              {" "}
               {errors.password && errors.password.message}{" "}
             </ErrorLabel>
           </p>
+          <ErrorLabel> this is a test {serverErrorMessage} </ErrorLabel>
           <Button text={buttonText} />
         </form>
       )}
