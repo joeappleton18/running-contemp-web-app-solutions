@@ -11,7 +11,6 @@ import * as yup from "yup";
 function LoginForm(props) {
   const { buttonText, onEmailSubmit, onSocialSubmit, serverErrorMessage } =
     props;
-  debugger;
   const [displayEmail, setDisplayEmail] = useState(false);
 
   const loginFormSchema = yup.object().shape({
@@ -57,7 +56,7 @@ function LoginForm(props) {
         <SocialIcon network="google" onClick={() => onSocialSubmit("google")} />
         <SocialIcon
           network="twitter"
-          onClick={() => onSocialSubmit("facebook")}
+          onClick={() => onSocialSubmit("twitter")}
         />
       </StyledSocialIconArea>
       <StyledHeading> OR </StyledHeading>

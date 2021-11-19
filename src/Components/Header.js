@@ -5,7 +5,7 @@ import avatarLarge from "../assets/avatar_small.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
-
+import useAuth from "../services/firebase/useAuth";
 function Menu(props) {
   const { onClick, signOut } = props;
   const location = useLocation();
@@ -63,7 +63,7 @@ Menu.propTypes = {
 
 function Header(props) {
   const { onClick, open, signOut } = props;
-
+  const { user } = useAuth();
   const handleClick = (e) => {
     e.preventDefault();
     onClick(e);
@@ -87,8 +87,13 @@ function Header(props) {
     color: ${({ theme }) => theme.colors.darkShade[50]};
     display: flex;
     align-items: center;
+    justify-content: right;
+    width: 20%;
     img {
-      margin-top: 8%;
+      margin: 1% 2% 0 2%;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
     }
   `;
 
@@ -129,9 +134,14 @@ function Header(props) {
           <hr />
         </StyledBurgerMenu>
         <StyledUserAvatar>
-          <FontAwesomeIcon style={{ fontSize: "16px" }} icon={faChevronDown} />
-          <h6 onClick={() => signOut()}> Joe Appleton </h6>
-          <img src={avatarLarge} alt="avatar" />
+          <h6>
+            {" "}
+            {user.displayName}{" "}
+            <span style={{ cursor: "pointer" }} onClick={() => signOut()}>
+              (sign out)
+            </span>
+          </h6>
+          <img src={user.photoURL} alt="avatar" />
         </StyledUserAvatar>
       </StyledWrapper>
     </div>

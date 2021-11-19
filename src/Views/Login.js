@@ -34,8 +34,8 @@ const StyledLink = styled(Link)`
 `;
 
 function Login(props) {
-  const { signInEmailUser } = props;
   const [serverErrorMessage, setServerErrorMessage] = useState();
+  const {signInEmailUser, signInFacebookUser, signInGoogleUser} = useAuth();
 
   const handleEmailSubmit = async (data) => {
     try {
@@ -46,7 +46,19 @@ function Login(props) {
     }
   };
 
-  return (
+  const handleSocialSubmit = async (method) => {
+    try {
+      if (method === "facebook") {
+        await signInFacebookUser();
+      }
+      if (method === "google") {
+        await signInGoogleUser();
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+    return (
     <StyledWrapper>
       <StyledTile>
         <StyledHeading>Login With </StyledHeading>
@@ -54,6 +66,7 @@ function Login(props) {
           buttonText="LOGIN"
           serverErrorMessage={serverErrorMessage}
           onEmailSubmit={handleEmailSubmit}
+          onSocialSubmit={handleSocialSubmit}
         />
         <StyledLink to="/join"> Not a member - Join </StyledLink>
       </StyledTile>

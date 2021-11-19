@@ -33,7 +33,7 @@ const StyledLink = styled(Link)`
 `;
 
 function Join(props) {
-  const { createEmailUser } = useAuth();
+  const { createEmailUser, signInFacebookUser, signInGoogleUser } = useAuth();
   const [severErrorMessage, setServerErrorMessage] = useState("this is a test");
 
   const handleEmailSubmit = async (data) => {
@@ -45,12 +45,26 @@ function Join(props) {
     }
   };
 
+  const handleSocialSubmit = async (method) => {
+    try {
+      if (method === "facebook") {
+        await signInFacebookUser();
+      }
+      if (method === "google") {
+        await signInGoogleUser();
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
   return (
     <StyledWrapper>
       <StyledTile>
         <StyledHeading>Get Started</StyledHeading>
         <StyledHeading>Join With </StyledHeading>
         <Form
+          onSocialSubmit={handleSocialSubmit}
           onEmailSubmit={handleEmailSubmit}
           serverErrorMessage={severErrorMessage}
         />

@@ -123,7 +123,7 @@ function App() {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        {location.pathname !== "/join" && (
+        {(location.pathname !== "/join" && location.pathname !== "/login") && (
           <Header onClick={handleClick} open={menuOpen} signOut={signUserOut} />
         )}
         <GlobalStyles />
