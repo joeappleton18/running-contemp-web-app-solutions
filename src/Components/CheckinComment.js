@@ -28,8 +28,7 @@ function LikeButton(props) {
   );
 }
 
-function CheckinComment(props) {
-  const StyledDetailsArea = styled.div`
+ const StyledDetailsArea = styled.div`
     display: grid;
     grid-template-columns: 0.2fr 3fr;
     align-items: center;
@@ -84,6 +83,9 @@ function CheckinComment(props) {
 
    
   `;
+
+function CheckinComment(props) {
+ 
 
   return (
     <Tile elevation="0.06">
