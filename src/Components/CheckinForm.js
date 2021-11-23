@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import Tile from "../Components/Tile";
 import styled from "styled-components";
 
@@ -79,74 +79,73 @@ const StyledCheckinTitle = styled.div`
   justify-content: space-between;
   p {
     font-size: 12px;
-    color:  ${({ theme, error}) => error ? "red" : theme.colors.darkShade[25]};
+    color: ${({ theme, error }) =>
+      error ? "red" : theme.colors.darkShade[25]};
     margin-top: 5%;
   }
 `;
 
-const CheckinForm = props => {
-
-  const {onSubmit} = props;
+const CheckinForm = (props) => {
+  const { onSubmit } = props;
   const [total, setTotal] = useState(0);
 
-  const maxCommentLength = 5; 
-  
-
+  const maxCommentLength = 5;
 
   const checkinFormSchema = yup.object().shape({
     exercise: yup.string().required("you must tell us if you have exercised"),
     veg: yup.string().required("you must tell us if you consumed your veg"),
     water: yup.string().required("you must tell us if you drank 2l of water"),
-    diet: yup.string().required("you must tell us if you kept tour diet")
+    diet: yup.string().required("you must tell us if you kept tour diet"),
   });
 
   const { register, handleSubmit, errors, watch } = useForm({
     validationSchema: checkinFormSchema,
-    defaultValues: {comment: "", exercise: "", veg: "", water: "", diet: ""}
+    defaultValues: { comment: "", exercise: "", veg: "", water: "", diet: "" },
   });
 
-  const comment = watch('comment');
+  const comment = watch("comment");
 
-  const [remainingCommentCount, setRemainingCommentCount] = useState(maxCommentLength);
-
+  const [remainingCommentCount, setRemainingCommentCount] =
+    useState(maxCommentLength);
 
   useEffect(() => {
-    
-      setRemainingCommentCount(maxCommentLength - comment.length);
-  
-  }, [comment])
+    setRemainingCommentCount(maxCommentLength - comment.length);
+  }, [comment]);
 
-   const formValues = watch();
-   let checkinScore = {
-      exercise: 0,
-      veg: 0,
-      water: 0,
-      diet: 0
-   }
+  const formValues = watch();
+  let checkinScore = {
+    exercise: 0,
+    veg: 0,
+    water: 0,
+    diet: 0,
+  };
 
-   useEffect(() => {
-
-    checkinScore.exercise = !formValues.exercise ? 0 : parseInt(formValues.exercise);
+  useEffect(() => {
+    checkinScore.exercise = !formValues.exercise
+      ? 0
+      : parseInt(formValues.exercise);
     checkinScore.veg = !formValues.veg ? 0 : parseInt(formValues.veg);
     checkinScore.water = !formValues.water ? 0 : parseInt(formValues.water);
 
     if (formValues.diet !== "") {
-       
-      checkinScore.diet = formValues.diet === "0" ? 10 - (parseInt(formValues.foodPen) + parseInt(formValues.drinkPen)) : parseInt(formValues.diet);
-
+      checkinScore.diet =
+        formValues.diet === "0"
+          ? 10 - (parseInt(formValues.foodPen) + parseInt(formValues.drinkPen))
+          : parseInt(formValues.diet);
     }
-    
-    setTotal(checkinScore.exercise + checkinScore.veg + checkinScore.water + checkinScore.diet);
-    
 
-   }, [formValues])
-
-
+    setTotal(
+      checkinScore.exercise +
+        checkinScore.veg +
+        checkinScore.water +
+        checkinScore.diet
+    );
+  }, [formValues]);
 
   const diet = watch("diet");
 
-  const onFormSubmit = data => {
-    onSubmit({...data, ...checkinScore, ...{total:total}});
+  const onFormSubmit = (data) => {
+    onSubmit({ ...data, ...checkinScore, ...{ score: total } });
   };
 
   return (
@@ -200,7 +199,7 @@ const CheckinForm = props => {
           <StyledLabel>Drinks</StyledLabel>
           <StyledLabel>Food</StyledLabel>
           <div>
-            <StyledIcon src={drinkIcon}  />
+            <StyledIcon src={drinkIcon} />
             <StyledSelect name="drinkPen" ref={register}>
               <option value="0"> 0 </option>
               <option value="1"> 1 </option>
@@ -224,8 +223,8 @@ const CheckinForm = props => {
         </StyledFoodDrinkArea>
       )}
 
-      <StyledCheckinTitle  error={remainingCommentCount < 0} >
-      <StyledLabel>Comment</StyledLabel> <p>{remainingCommentCount}</p>{" "}
+      <StyledCheckinTitle error={remainingCommentCount < 0}>
+        <StyledLabel>Comment</StyledLabel> <p>{remainingCommentCount}</p>{" "}
       </StyledCheckinTitle>
       <textarea rows="4" cols="40" name="comment" ref={register}></textarea>
       <StyledHeading> Total: {total} points </StyledHeading>
@@ -235,9 +234,7 @@ const CheckinForm = props => {
 };
 
 CheckinForm.propTypes = {
-
-  onSubmit: PropTypes.func.isRequired
-
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default CheckinForm;

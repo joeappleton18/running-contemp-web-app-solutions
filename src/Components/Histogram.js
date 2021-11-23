@@ -26,7 +26,7 @@ function Bar(props) {
     );
 
     opacity: 100 !important;
-    height: ${props => props.height + "%"};
+    height: ${(props) => props.height + "%"};
     width: 100%;
     border-radius: 1px;
   `;
@@ -39,11 +39,8 @@ function Bar(props) {
 }
 
 Bar.propTypes = {
-  percentage: PropTypes.number.isRequired
+  percentage: PropTypes.number.isRequired,
 };
-
-
-
 
 function Histogram(props) {
   const { bars, barCount } = props;
@@ -55,14 +52,16 @@ function Histogram(props) {
 
   return (
     <StyledHistogram>
-      {bars.map((b, i) => (i <= barCount ? <Bar percentage={b} /> : ""))}
+      {bars.map((b, i) =>
+        i <= barCount ? <Bar key={i} percentage={b} /> : ""
+      )}
     </StyledHistogram>
   );
 }
 
 Histogram.propTypes = {
   bars: PropTypes.array.isRequired,
-  barCount: PropTypes.number.isRequired
+  barCount: PropTypes.number.isRequired,
 };
 
 export default Histogram;
