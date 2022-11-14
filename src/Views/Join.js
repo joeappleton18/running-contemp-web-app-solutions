@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Tile from "../Components/Tile";
 import { Link } from "react-router-dom";
-import Form from "../Components/LoginForm"
+import Form from "../Components/LoginForm";
 
 
 function Join() {
