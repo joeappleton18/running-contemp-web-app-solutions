@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import theme from "./config/theme.js";
+import React, { useEffect, useState } from "react";
+import { Route, Switch, useLocation } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import GlobalStyles from "./config/GlobalStyles";
 import Header from "./Components/Header";
-import { Switch, Route, useLocation } from "react-router-dom";
+import GlobalStyles from "./config/globalStyles";
+import theme from "./config/theme.js";
 
+import Checkin from "./Views/Checkin";
 import Dash from "./Views/Dash";
 import Join from "./Views/Join";
-import Checkin from "./Views/Checkin";
 import Profile from "./Views/Profile";
 
 const checkins = [
