@@ -54,6 +54,11 @@ const StyledUserAvatar = styled.div`
     align-items: center;
     img {
       margin-top: 8%;
+      margin: 1% 2% 0 2%;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+
     }
   `;
 
