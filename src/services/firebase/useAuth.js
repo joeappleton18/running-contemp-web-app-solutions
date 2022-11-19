@@ -1,7 +1,6 @@
 import {
-	createUserWithEmailAndPassword, getAuth,
-	onAuthStateChanged,
-	signInWithEmailAndPassword, signOut,
+	createUserWithEmailAndPassword, FacebookAuthProvider, getAuth, GoogleAuthProvider, onAuthStateChanged,
+	signInWithEmailAndPassword, signInWithPopup, signOut
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 
@@ -10,6 +9,8 @@ function useAuth() {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [user, setUser] = useState({})
 	const auth = getAuth();
+	const facebookProvider = new FacebookAuthProvider();
+	const googleProvider = new GoogleAuthProvider();
 
 	useEffect(() => {
 
@@ -21,7 +22,7 @@ function useAuth() {
 				return;
 			}
 			setIsAuthenticated(false);
-			console.log("auth called");
+			setUser({});
 			return;
 		});
 
@@ -36,8 +37,13 @@ function useAuth() {
 		signInWithEmailAndPassword(auth, email, password);
 
 	const signUserOut = () => signOut(auth);
+	const signInFacebookUser = () => signInWithPopup(auth, facebookProvider)
+	const signInGoogleUser = () => signInWithPopup(auth, googleProvider);
 
-	return { createEmailUser, isAuthenticated, signInEmailUser, signUserOut, user };
+	return {
+		createEmailUser, isAuthenticated, signInEmailUser, signUserOut, user, signInFacebookUser,
+		signInGoogleUser
+	};
 }
 
 export default useAuth;
