@@ -1,11 +1,9 @@
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import avatar from "../assets/avatar_small.png";
 import useAuth from "../services/firebase/useAuth";
-import avatar from "../assets/avatar_small.png"
 
 const StyledNav = styled.nav`
     ul {  
@@ -119,9 +117,7 @@ function Header(props) {
 
   const { user, signUserOut } = useAuth();
 
-
-
-
+  if (!user.uid) { return "" }
 
   return (
     <div>

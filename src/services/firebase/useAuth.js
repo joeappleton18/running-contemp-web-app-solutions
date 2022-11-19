@@ -22,7 +22,7 @@ function useAuth() {
 				return;
 			}
 			setIsAuthenticated(false);
-			setUser({});
+			setUser({})
 			return;
 		});
 
