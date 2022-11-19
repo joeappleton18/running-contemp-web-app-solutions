@@ -4,7 +4,7 @@ import { ThemeProvider } from "styled-components";
 import Header from "./Components/Header";
 import GlobalStyles from "./config/globalStyles";
 import theme from "./config/theme.js";
-
+import Login from "./Views/Login";
 import Checkin from "./Views/Checkin";
 import Dash from "./Views/Dash";
 import Join from "./Views/Join";
@@ -90,6 +90,9 @@ function App() {
           <Switch>
             <Route exact path="/">
               <Dash checkins={checkins} />
+            </Route>
+            <Route path="/login">
+              <Login />
             </Route>
             <Route path="/join">
               <Join />
