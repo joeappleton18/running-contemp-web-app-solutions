@@ -9,8 +9,31 @@ import Input from "../Components/Input";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+const StyledErrorLabel = styled.label`
+    color: red;
+    font-weight: bolder;
+    margin: 1% 0 4% 0;
+  `;
+
+const StyledHeading = styled.h2`
+    text-align: center;
+    margin-top: 2%;
+    color: ${({ theme }) => theme.colors.purple};
+  `;
+
+const StyledSocialIconArea = styled.div`
+    display: flex;
+    justify-content: space-around;
+    img {
+      width: 50px;
+      height: 50px;
+    }
+  `;
+
+
+
 function LoginForm(props) {
-  const { buttonText, onEmailSubmit, onSocialSubmit } = props;
+  const { buttonText, onEmailSubmit, onSocialSubmit, serverErrorMessage } = props;
   const [displayEmail, setDisplayEmail] = useState(false);
 
   const loginFormSchema = yup
@@ -34,26 +57,7 @@ function LoginForm(props) {
     resolver: yupResolver(loginFormSchema),
   });
 
-  const StyledErrorLabel = styled.label`
-    color: red;
-    font-weight: bolder;
-    margin: 1% 0 4% 0;
-  `;
-
-  const StyledHeading = styled.h2`
-    text-align: center;
-    margin-top: 2%;
-    color: ${({ theme }) => theme.colors.purple};
-  `;
-
-  const StyledSocialIconArea = styled.div`
-    display: flex;
-    justify-content: space-around;
-    img {
-      width: 50px;
-      height: 50px;
-    }
-  `;
+ 
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -99,6 +103,7 @@ function LoginForm(props) {
             />
             <StyledErrorLabel>{errors?.password?.message}</StyledErrorLabel>
           </p>
+          <StyledErrorLabel> {serverErrorMessage} </StyledErrorLabel>
           <Button text={buttonText} type="submit" />
         </form>
       )}

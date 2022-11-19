@@ -1,12 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-
-function Button(props) {
-
-  const {onClick, text} = props;
-    
-  const StyledButton = styled.button`
+const StyledButton = styled.button`
     height: 44.63px;
     background: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
     border-radius: 22px;
@@ -18,6 +13,11 @@ function Button(props) {
     width: 100%;
     margin-top: 6%;
   `;
+function Button(props) {
+
+  const {onClick, text} = props;
+    
+ 
 
   return(  
     <StyledButton onClick={onClick}> {text} </StyledButton>

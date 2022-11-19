@@ -1,13 +1,16 @@
+import { initializeApp } from "firebase/app";
 import React, { useEffect, useState } from "react";
-import { Route, Switch, useLocation } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import Header from "./Components/Header";
+import firebaseConfig from "./config/firebase";
 import GlobalStyles from "./config/globalStyles";
 import theme from "./config/theme.js";
-
+import useAuth from "./services/firebase/useAuth";
 import Checkin from "./Views/Checkin";
 import Dash from "./Views/Dash";
 import Join from "./Views/Join";
+import Login from "./Views/Login";
 import Profile from "./Views/Profile";
 
 const checkins = [
@@ -60,10 +63,34 @@ const checkins = [
   },
 ];
 
+
+function Protected({ authenticated, children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        authenticated ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-
+  initializeApp(firebaseConfig);
+  const history = useHistory();
+  const { isAuthenticated, createEmailUser, signInEmailUser, signUserOut } = useAuth();
   const handleClick = (e) => {
     setMenuOpen(!menuOpen);
   };
@@ -75,6 +102,15 @@ function App() {
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      debugger;
+      history.push(history.location.state.from.pathname);
+      return;
+    }
+    return;
+  }, [isAuthenticated]);
 
   return (
     <div>
@@ -88,18 +124,21 @@ function App() {
           style={{ width: "100vw", height: "100vh" }}
         >
           <Switch>
-            <Route exact path="/">
+            <Protected authenticated={isAuthenticated} exact path="/">
               <Dash checkins={checkins} />
-            </Route>
+            </Protected>
             <Route path="/join">
               <Join />
             </Route>
-            <Route path="/profile">
+            <Route authenticated={isAuthenticated} path="/login">
+              <Login />
+            </Route>
+            <Protected authenticated={isAuthenticated} path="/profile">
               <Profile />
-            </Route>
-            <Route path="/checkin">
+            </Protected>
+            <Protected authenticated={isAuthenticated} path="/checkin">
               <Checkin />
-            </Route>
+            </Protected>
           </Switch>
         </div>
       </ThemeProvider>
