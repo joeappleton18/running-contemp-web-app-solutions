@@ -1,70 +1,27 @@
-import { initializeApp } from "firebase/app";
-import React, { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-import Header from "./Components/Header";
-import firebaseConfig from "./config/firebase";
-import GlobalStyles from "./config/globalStyles";
-import theme from "./config/theme.js";
+import React, { useState, useEffect } from "react";
 import useAuth from "./services/firebase/useAuth";
-import Checkin from "./Views/Checkin";
+import useCheckin from "./services/firebase/useCheckin";
+import theme from "./config/theme.js";
+import { ThemeProvider } from "styled-components";
+import GlobalStyles from "./config/globalStyles";
+import Header from "./Components/Header";
+import {
+  Switch,
+  Route,
+  useLocation,
+  useHistory,
+  Redirect,
+} from "react-router-dom";
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "./config/firebase";
 import Dash from "./Views/Dash";
 import Join from "./Views/Join";
-import Login from "./Views/Login";
+import Checkin from "./Views/Checkin";
 import Profile from "./Views/Profile";
-
-const checkins = [
-  {
-    date: "Wed Jan 29 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 20,
-  },
-  {
-    date: "Wed Jan 28 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 15,
-  },
-  { date: "Wed Jan 27 2020 07:17:11 GMT+0000 (Greenwich Mean Time)", score: 8 },
-  { date: "Wed Jan 26 2020 07:17:11 GMT+0000 (Greenwich Mean Time)", score: 2 },
-  {
-    date: "Wed Jan 25 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 20,
-  },
-  {
-    date: "Wed Jan 23 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 12,
-  },
-  {
-    date: "Wed Jan 22 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 19,
-  },
-  {
-    date: "Wed Jan 21 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 10,
-  },
-  {
-    date: "Wed Jan 20 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 15,
-  },
-  { date: "Wed Jan 19 2020 07:17:11 GMT+0000 (Greenwich Mean Time)", score: 6 },
-  {
-    date: "Wed Jan 18 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 20,
-  },
-  {
-    date: "Wed Jan 17 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 20,
-  },
-  {
-    date: "Wed Jan 16 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 20,
-  },
-  {
-    date: "Wed Jan 15 2020 07:17:11 GMT+0000 (Greenwich Mean Time)",
-    score: 20,
-  },
-];
-
+import Login from "./Views/Login";
 
 function Protected({ authenticated, children, ...rest }) {
+  debugger;
   return (
     <Route
       {...rest}
@@ -84,13 +41,25 @@ function Protected({ authenticated, children, ...rest }) {
   );
 }
 
-
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [checkins, setCheckins] = useState([]);
   const location = useLocation();
-  initializeApp(firebaseConfig);
   const history = useHistory();
-  const { isAuthenticated, createEmailUser, signInEmailUser, signUserOut } = useAuth();
+  const app = initializeApp(firebaseConfig);
+
+  const { isAuthenticated, createEmailUser, signInEmailUser, signUserOut } =
+    useAuth();
+
+
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push(history.location.state.from.pathname);
+    }
+    return;
+  }, [isAuthenticated]);
+
   const handleClick = (e) => {
     setMenuOpen(!menuOpen);
   };
@@ -103,39 +72,36 @@ function App() {
     setMenuOpen(false);
   }, [location]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      history.push(history.location.state.from.pathname);
-      return;
-    }
-    return;
-  }, [isAuthenticated]);
-
   return (
     <div>
       <ThemeProvider theme={theme}>
-        {location.pathname !== "/join" && (
-          <Header onClick={handleClick} open={menuOpen} />
+        {location.pathname !== "/join" && location.pathname !== "/login" && (
+          <Header onClick={handleClick} open={menuOpen} signOut={signUserOut} />
         )}
         <GlobalStyles />
         <div
           onClick={handleOuterWrapperClick}
-          style={{ width: "100vw", height: "100vh" }}
+          style={{
+            width: "100vw",
+            horizontalScroll: "none",
+            overflowX: "hidden",
+            height: "100vh",
+          }}
         >
           <Switch>
             <Protected authenticated={isAuthenticated} exact path="/">
-              <Dash checkins={checkins} />
+              <Dash />
             </Protected>
             <Route path="/join">
-              <Join />
+              <Join createEmailUser={createEmailUser} />
             </Route>
-            <Route authenticated={isAuthenticated} path="/login">
-              <Login />
+            <Route path="/login">
+              <Login signInEmailUser={signInEmailUser} />
             </Route>
             <Protected authenticated={isAuthenticated} path="/profile">
               <Profile />
             </Protected>
-            <Protected authenticated={isAuthenticated} path="/checkin">
+            <Protected authenticated={isAuthenticated} exact path="/checkin">
               <Checkin />
             </Protected>
           </Switch>
