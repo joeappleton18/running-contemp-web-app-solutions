@@ -105,8 +105,7 @@ function App() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      debugger;
-      history.push("/");
+      history.push(history.location.state.from.pathname);
       return;
     }
     return;
